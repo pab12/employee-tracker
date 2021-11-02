@@ -54,10 +54,10 @@ function mainMenu() {
           addEmployee();
           break;
         case 'update an employee role':
-
+          updateRole();
           break;
         case 'Done':
-
+          process.exit();
           break;
 
       }
@@ -207,7 +207,56 @@ function employeesManager() {
   });
 };
 
+
+function updateRole(){
+  employeesManager();
+  role=[];
+console.log(array)
+  db.query(`SELECT role.title FROM role`,(err,roles)=> {
+    for(let i = 0; i< roles.length; i++){
+        role.push(roles[i].title);
+       console.log('this',role);
+    }
+    
+    // console.log([roles[0].title]);
+    inquirer
+    .prompt([
+     
+      {
+        message: 'Which employee would you like to update their role?',
+        type: 'list',
+        name: 'employee',
+        choices: array
+      },
+      {
+        message: 'What is the updated role?',
+        type: 'list',
+        name: 'newRole',
+        choices: role
+      }
+    ]).then((results)=> {
+      let employeeName = [];
+      employeeName.push(results.employee);
+    
+      // console.log(results.employee);
+      // console.log(employeeName);
+       let employeeName2 = results.employee.split(' ');
+  
+       db.query(`SELECT employee.id, role.id AS roleID FROM employee, role  WHERE employee.first_name = '${employeeName2[0]}' AND employee.last_name = '${employeeName2[1]}' AND role.title = '${results.newRole}'`, (err,employeeID)=> {
+        //  console.log('nice', employeeID);
+        //  console.log('nice', employeeID[0].id,employeeID[0].roleID);
+         db.query(`UPDATE employee SET role_id = ${employeeID[0].roleID} WHERE employee.id = ${employeeID[0].id}`,(updated)=>{
+           mainMenu();
+         }) 
+       })
+    })
+  })
+ 
+};
+
 function empty() {
   //empty the array.
   array.length = 1;
 };
+
+//SELECT employee.id, role.id FROM employee LEFT JOIN role ON employee.role_id =role.id  WHERE employee.first_name = 'SUH' AND employee.last_name = 'asd' AND role.title ='Sales Lead';
