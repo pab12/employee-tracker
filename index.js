@@ -174,7 +174,7 @@ function addEmployee() {
       db.query(`SELECT *, employee.id FROM employee`, (err, emDB) => {
         let theId = null;
         for (let i = 0; i < emDB.length; i++) {
-          console.log(i);
+          // console.log(i);
           if (emDB[i].first_name + ' ' + emDB[i].last_name === results.manager) {
             theId = emDB[i].id;
           };
@@ -211,11 +211,11 @@ function employeesManager() {
 function updateRole(){
   employeesManager();
   role=[];
-console.log(array)
+// console.log(array)
   db.query(`SELECT role.title FROM role`,(err,roles)=> {
     for(let i = 0; i< roles.length; i++){
         role.push(roles[i].title);
-       console.log('this',role);
+      //  console.log('this',role);
     }
     
     // console.log([roles[0].title]);
